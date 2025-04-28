@@ -48,14 +48,14 @@ def lambda_handler(event, context):
         print("Processing message:", message)
         print("Using model:", MODEL_ID)
         
-        # # 会話履歴を使用
-        # messages = conversation_history.copy()
+        # 会話履歴を使用
+        messages = conversation_history.copy()
         
-        # # ユーザーメッセージを追加
-        # messages.append({
-        #     "role": "user",
-        #     "content": message
-        # })
+        # ユーザーメッセージを追加
+        messages.append({
+            "role": "user",
+            "content": message
+        })
         
         # # Nova Liteモデル用のリクエストペイロードを構築
         # # 会話履歴を含める
@@ -119,9 +119,9 @@ def lambda_handler(event, context):
             "top_p": 0.9
         }
 
-        req = request.Request(API_BASEURL + "/generate", json.dumps(request_payload), headers)
+        req = request.Request(API_BASEURL + "/generate", json.dumps(request_payload).encode("utf-8"), headers)
         with request.urlopen(req) as resp:
-            response_body = json.loads(resp.read())
+            response_body = json.loads(resp.read().decode("utf-8"))
             # レスポンスを解析
             print("FastAPI response:", json.dumps(response_body, default=str))
         
